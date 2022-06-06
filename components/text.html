@@ -1,0 +1,10 @@
+<span class="text" style="padding:.25rem; background-color:red; color:#fff; border-radius:50%"></span>
+<script>
+    let text = reactive({
+        output:{
+            autoCounter:()=>document.querySelectorAll('.text')
+        }
+    })
+    text.autoCounter = 0
+    setInterval(()=> text.autoCounter++ , 2000 )
+</script>

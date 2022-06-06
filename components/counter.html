@@ -1,0 +1,23 @@
+<div>
+    <div>Counter <b id="count"></b></div>
+    <button id="plus">+</button>
+    <button id="minus">-</button>
+    <hr>
+    <rtitle></rtitle>
+    <text></text>
+    <div id="extra"></div>
+</div>
+<script>
+    let component = reactive({
+        sync:{
+            count:()=> document.querySelector('#count'),
+            extra:()=>document.querySelector('#extra')
+        }
+    })
+    component.count = 0
+    setTimeout(()=>{
+        component.extra = 'ADD <text></text> title ? <rtitle></rtitle>'
+    }, 4000 )
+    document.querySelector('#plus').addEventListener('click' , event => component.count++ )
+    document.querySelector('#minus').addEventListener('click' , event => component.count-- )
+</script>

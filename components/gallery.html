@@ -1,0 +1,55 @@
+<h3>Galeria</h3>
+<div class="container d-flex flex-wrap" id="pokedexList"></div>
+
+<script>
+    // galeria pokemon
+    const templateCard = item => `
+            <div class="card m-1" style="width: 18rem;">
+                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${item.id + 1}.png">
+                <div class="card-body">
+                    <h5 class="card-title">${item.name}</h5>
+                    <p class="card-text">${item.name}: esta es una descripcion</p>
+                    <div>
+                        <button class="btn btn-primary" data-id="${item.id + 1}" data-url="${item.url}">Ver tipo</button>
+                        <span>${item.types}</span>
+                    </div>
+                </div>
+            </div>
+        `
+        document.querySelector('#pokedexList').addEventListener('click' , event => {
+            if( event.target.getAttribute('data-id') != undefined ){
+                console.clear()
+                fetch( event.target.getAttribute('data-url') )
+                .then( async res => {
+                    let data = await res.json()
+                    pokedex.listData[ event.target.getAttribute('data-id') - 1 ].types = data.types.map( itemResult => itemResult.type.name).join(',')
+                } )
+                .catch(error => header.alert = alertRender('danger',error.message))
+        
+            }
+        })
+        let pokedex = reactive({
+            sync:{
+                html:()=>document.querySelector('#pokedexList')
+            },
+            after:{
+                listData( self ){
+                    if( self ){
+                        pokedex.html = Array.from(self.listData).map( (item , id ) => templateCard( { id , types:'' , ...item  } ) ).join('')
+                    }
+                    return ['listData','listData.*','listData.*.types']
+                }
+            }
+        })
+        // header.alert = alertRender('success','Esta funcionando reactive')
+        fetch('https://pokeapi.co/api/v2/pokemon/')
+        .then( async res => {
+            // header.alert = alertRender('success','Obtenidos '+res.data.results.length+' pokemon')
+            let data = await res.json()
+            pokedex.listData = data.results
+        })
+        .catch(error => {
+            // header.alert = alertRender('danger',error.message)
+        })
+        
+</script>
